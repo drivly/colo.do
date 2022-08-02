@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "geolib": "^3.3.3"
+  }
+}
