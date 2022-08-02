@@ -1,3 +1,5 @@
+import getDistance from 'distance' 
+
 export default {
   fetch: async (req, env) => {
     const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: latency } = req.cf
@@ -8,8 +10,11 @@ export default {
                             .fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
     const durableObjectLatency = new Date() - start
     const workerLocation = locations.find(loc => loc.iata == workerColo)
-    const durableObjectLocation = locations.find(loc => loc.iata == doColo)
-    return new Response(JSON.stringify({ durableObjectLatency, workerLocation, durableObjectLocation, visitor }, null, 2))
+    const durableLocation = locations.find(loc => loc.iata == doColo)
+    const visitorDistanceToWorker = getDistance({latitude,longitude}, {latitude: workerLocation.lat, longitude: workerLocation.lon}) / 1000
+    const workerDistanceToDurable = getDistance({latitude: workerLocation.lat, longitude: workerLocation.lon}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000
+    const visitorDistanceToDurable = getDistance({latitude,longitude}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000
+    return new Response(JSON.stringify({ durableObjectLatency, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable,  workerLocation, durableLocation, visitor }, null, 2))
   }
 }
 
