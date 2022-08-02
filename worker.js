@@ -5,9 +5,9 @@ export default {
     const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
     const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
     const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
+    const stub = env.COLO.get(env.COLO.idFromName(workerColo))
     const start = new Date()
-    const { colo: doColo } = await env.COLO.get(env.COLO.idFromName(workerColo))
-                            .fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
+    const { colo: doColo } = await stub.fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
     const workerLatencyToDurable = new Date() - start
     const workerLocation = locations.find(loc => loc.iata == workerColo)
     const durableLocation = locations.find(loc => loc.iata == doColo)
