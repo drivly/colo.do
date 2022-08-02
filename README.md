@@ -66,3 +66,10 @@ export class Colo {
   }
 }
 ```
+
+## Roadmap
+
+- [ ] Create Colo List DO
+- [ ] Enable Proxying through any colo DO
+- [ ] Log latency and performance to gather data
+- [ ] Ping every Colo DO from every other Colo DO to measure/track performance over time
