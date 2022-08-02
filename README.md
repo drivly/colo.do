@@ -10,7 +10,7 @@ export default {
     const start = new Date()
     const { colo: doColo } = await env.COLO.get(env.COLO.idFromName(workerColo))
                             .fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
-    const doLatency = new Date() - start
+    const durableObjectLatency = new Date() - start
     const workerLocation = locations.find(loc => loc == workerColo)
     const durableObjectLocation = locations.find(loc => loc == doColo)
     return new Response(JSON.stringify({ durableObjectLatency, workerLocation, durableObjectLocation, visitor }, null, 2))
