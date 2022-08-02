@@ -1,7 +1,7 @@
 export default {
   fetch: async (req, env) => {
-    const { colo: workerColo, longitude, longitude, country, region, city, asn, asOrganization, metroCode, postalCode, clientTcpRtt: latency } = req.cf
-    const visitor = { longitude, longitude, country, region, city, asn, asOrganization, metroCode, postalCode, latency }
+    const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization, metroCode, postalCode, clientTcpRtt: latency } = req.cf
+    const visitor = { latitude, longitude, country, region, city, asn, asOrganization, metroCode, postalCode, latency }
     const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
     const start = new Date()
     const { colo: doColo } = await env.COLO.get(env.COLO.idFromName(workerColo))
