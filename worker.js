@@ -1,4 +1,4 @@
-import getDistance from 'distance' 
+import getDistance from './distance' 
 
 export default {
   fetch: async (req, env) => {
