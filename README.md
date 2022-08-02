@@ -1,6 +1,8 @@
 # [colo.do](https://colo.do)
 Cloudflare Durable Object Proxy for specific Colo Locations to measure and monitor performance
 
+<https://colo.do/api>
+
 ```
 {
   "visitorLatencyToWorker": 36,
