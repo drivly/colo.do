@@ -24,4 +24,5 @@ export class Colo {
      const res = await fetch(req)
      console.log('metatime', new Date() - start)
      return res
+  }
 }
