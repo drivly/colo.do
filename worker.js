@@ -20,7 +20,7 @@ export default {
 
 export class Colo {
   constructor(state, env) {
-    state.waitUntil(
+    state.waitUntil(async () =>
       this.meta = await stub.fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
     )
   }
