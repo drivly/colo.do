@@ -19,17 +19,9 @@ export default {
 }
 
 export class Colo {
-//   constructor(state, env) {
-//     state.waitUntil(async () =>
-//       this.meta = await stub.fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
-//     )
-//   }
   async fetch(req) {
-    //  return fetch(req)
-        return new Response(JSON.stringify(this.meta))
-    if (!this.data) {
-      this.res = await fetch(req)
-    }
-    return this.res.clone()
-  }
+     const start = new Date()
+     const res = await fetch(req)
+     console.log('metatime', new Date() - start)
+     return res
 }
