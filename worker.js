@@ -7,7 +7,7 @@ export default {
     const locations = await fetch('https://speed.cloudflare.com/locations', { cf: { cacheTtl: 24 * 60 * 60, cacheEverything: true } }).then(res => res.json())
     const stub = env.COLO.get(env.COLO.idFromName(workerColo))
     const start = new Date()
-    const { colo: doColo } = await stub.fetch('https://workers.cloudflare.com/cf.json', { cf: { cacheTtl: 24 * 60 * 60, cacheEverything: true } }).then(res => res.json())
+    const doColo = await stub.fetch('https://colo.do').then(res => res.text())
     const workerLatencyToDurable = new Date() - start
     const workerLocation = locations.find(loc => loc.iata == workerColo)
     const durableLocation = locations.find(loc => loc.iata == doColo)
@@ -19,10 +19,13 @@ export default {
 }
 
 export class Colo {
+  constructor(state, env) {
+    state.blockConcurrencyWhile(async () => {
+      const { colo } = await stub.fetch('https://workers.cloudflare.com/cf.json', { cf: { cacheTtl: 24 * 60 * 60, cacheEverything: true } }).then(res => res.json())
+      this.colo =  colo
+    }
+  }
   async fetch(req) {
-     const start = new Date()
-     const res = await fetch(req)
-     console.log('metatime', new Date() - start)
-     return res
+     return new Response(this.colo)
   }
 }
