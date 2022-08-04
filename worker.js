@@ -4,7 +4,7 @@ export default {
   fetch: async (req, env) => {
     const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
     const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
-    const locations = await fetch('https://speed.cloudflare.com/locations', { cf: { cacheTtl: 24 * 60 * 60, cacheEverything: true } }).then(res => res.json())
+    const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
     const stub = env.COLO.get(env.COLO.idFromName(workerColo))
     const start = new Date()
     const doColo = await stub.fetch('https://colo.do').then(res => res.text())
@@ -21,7 +21,7 @@ export default {
 export class Colo {
   constructor(state, env) {
     state.blockConcurrencyWhile(async () => {
-      const { colo } = await stub.fetch('https://workers.cloudflare.com/cf.json', { cf: { cacheTtl: 24 * 60 * 60, cacheEverything: true } }).then(res => res.json())
+      const { colo } = await stub.fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
       this.colo =  colo
     }
   }
