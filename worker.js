@@ -14,7 +14,8 @@ export default {
     const visitorDistanceToWorker = Math.round(getDistance({latitude,longitude}, {latitude: workerLocation.lat, longitude: workerLocation.lon}) / 1000)
     const workerDistanceToDurable = Math.round(getDistance({latitude: workerLocation.lat, longitude: workerLocation.lon}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
     const visitorDistanceToDurable = Math.round(getDistance({latitude,longitude}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
-    return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2))
+    const headers = { 'x-do-colo': doColo, 'x-do-latency': workerLatencyToDurable, 'x-visitor-latency': visitorLatencyToWorker }
+    return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2), { headers })
   }
 }
 
@@ -26,8 +27,6 @@ export class Colo {
     })
   }
   async fetch(req) {
-    const res = new Response(this.colo)
-    res.headers.set('x-do-colo', this.colo)
-    return res
+    return eew Response(this.colo)
   }
 }
