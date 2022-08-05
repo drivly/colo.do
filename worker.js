@@ -27,6 +27,6 @@ export class Colo {
     })
   }
   async fetch(req) {
-    return eew Response(this.colo)
+    return new Response(this.colo)
   }
 }
