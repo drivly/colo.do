@@ -26,6 +26,6 @@ export class Colo {
     })
   }
   async fetch(req) {
-     return new Response(this.colo)
+     return new Response(this.colo, { headers: { 'x-do-colo': this.colo }})
   }
 }
