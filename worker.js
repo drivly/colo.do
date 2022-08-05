@@ -26,6 +26,8 @@ export class Colo {
     })
   }
   async fetch(req) {
-     return new Response(this.colo, { headers: { 'x-do-colo': this.colo }})
+    const res = new Response(this.colo)
+    res.headers.append('x-do-colo', this.colo)
+    return res
   }
 }
