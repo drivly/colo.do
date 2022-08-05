@@ -21,7 +21,7 @@ export default {
 export class Colo {
   constructor(state, env) {
     state.blockConcurrencyWhile(async () => {
-      const { colo } = await stub.fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
+      const { colo } = await fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
       this.colo =  colo
     })
   }
