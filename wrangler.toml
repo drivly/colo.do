@@ -1,6 +1,6 @@
 name = "colo-do"
 account_id = "b6641681fe423910342b9ffa1364c76d"
-route = "colo.do/*"
+# route = "colo.do/*"
 main = "worker.js"
 compatibility_date = "2022-07-18"
 
