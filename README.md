@@ -1,9 +1,10 @@
 # [colo.do](https://colo.do)
+
 Cloudflare Durable Object Proxy for specific Colo Locations to measure and monitor performance
 
 <https://colo.do/api>
 
-```
+```json
 {
   "visitorLatencyToWorker": 36,
   "workerLatencyToDurable": 20,
@@ -41,7 +42,8 @@ Cloudflare Durable Object Proxy for specific Colo Locations to measure and monit
 ```
 
 Here is the code:
-```
+
+```javascript
 import getDistance from 'geolib/es/getDistance' 
 
 export default {
