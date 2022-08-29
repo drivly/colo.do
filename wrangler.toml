@@ -1,6 +1,6 @@
 name = "colo-do"
 account_id = "b6641681fe423910342b9ffa1364c76d"
-route = { pattern = "colo.do/api*", zone_id = "915d9a2273f561654a65ff5722805fec" }
+route = { pattern = "*colo.do/api*", zone_id = "915d9a2273f561654a65ff5722805fec" }
 main = "worker.js"
 compatibility_date = "2022-07-18"
 
