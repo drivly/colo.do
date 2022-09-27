@@ -65,7 +65,6 @@ export class Colo {
     } catch {
       data = text
     }
-    })
     
     const colo = {
       iata: this.colo,
