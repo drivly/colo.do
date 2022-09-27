@@ -65,32 +65,34 @@ export class Colo {
       }
     })
     
-    return new Response(JSON.stringify({ api, colo: this.colo, responseTime, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
+    const fetchFrom = Object.entries(colos).reduce((acc, [colo, name]) => ({ ...acc, [name]: `https://${colo}.colo.do${pathname}`}), {})
+    return new Response(JSON.stringify({ api, colo: this.colo, responseTime, fetchFrom, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   }
 }
 
-const colos = [
-  "AMS",
-  "ARN",
-  "ATL",
-  "CDG",
-  "DEN",
-  "DFW",
-  "EWR",
-  "FRA",
-  "HKG",
-  "IAD",
-  "KIX",
-  "LAX",
-  "LHR",
-  "MIA",
-  "MRS",
-  "MXP",
-  "NRT",
-  "ORD",
-  "PRG",
-  "SEA",
-  "SIN",
-  "SJC",
-  "VIE"
-]
+const colos = {
+  ams: 'Amsterdam',
+  atl: 'Atlanta',
+  ord: 'Chicago',
+  dfw: 'Dallas',
+  den: 'Denver',
+  fra: 'Frankfurt',
+  hkg: 'Hong Kong',
+  lhr: 'London',
+  lax: 'Los Angeles',
+  mia: 'Miami',
+  mrs: 'Marseille',
+  mxp: 'Milan',
+  ewr: 'Newark',
+  kix: 'Osaka',
+  cdg: 'Paris',
+  prg: 'Prague',
+  sjc: 'San Jose',
+  sea: 'Seattle',
+  sin: 'Singapore',
+  arn: 'Stockholm',
+  nrt: 'Tokyo',
+  via: 'Vienna',
+  iad: 'Washington DC',
+}
+
