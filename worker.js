@@ -44,13 +44,14 @@ export class Colo {
   constructor(state, env) {
     state.blockConcurrencyWhile(async () => {
       const { colo } = await fetch('https://workers.cloudflare.com/cf.json').then(res => res.json())
-      this.colo =  colo
+      this.colo = colo
+      this.env = env
     })
   }
   async fetch(req) {
     if (req.url == 'https://colo.do') return new Response(this.colo)
     
-    const { user, origin, requestId, method, body, time, pathname, pathSegments, pathOptions, url, query } = await env.CTX.fetch(req).then(res => res.json())
+    const { user, origin, requestId, method, body, time, pathname, pathSegments, pathOptions, url, query } = await this.env.CTX.fetch(req).then(res => res.json())
         
     const start = new Date()
     const res = await fetch('https:/' + pathname).catch(error => undefined)
