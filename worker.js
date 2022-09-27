@@ -1,21 +1,43 @@
 import getDistance from 'geolib/es/getDistance' 
   
+export const api = {
+  icon: '⚡️',
+  name: 'colo.do',
+  description: 'Durable Object Colos',
+  url: 'https://colo.do/api',
+  type: 'https://apis.do/proxies',
+  endpoints: {
+    getCurrentColo: 'https://colo.do/api',
+    proxyFromColo: 'https://ord.colo.do/:url',
+  },
+  site: 'https://colo.do',
+  login: 'https://colo.do/login',
+  signup: 'https://colo.do/signup',
+  repo: 'https://github.com/drivly/colo.do',
+}
+
 export default {
   fetch: async (req, env) => {
-    const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
-    const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
-    const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
-    const stub = env.COLO.get(env.COLO.idFromName(workerColo))
-    const start = new Date()
-    const doColo = await stub.fetch('https://colo.do').then(res => res.text())
-    const workerLatencyToDurable = new Date() - start
-    const workerLocation = locations.find(loc => loc.iata == workerColo)
-    const durableLocation = locations.find(loc => loc.iata == doColo)
-    const visitorDistanceToWorker = Math.round(getDistance({latitude,longitude}, {latitude: workerLocation.lat, longitude: workerLocation.lon}) / 1000)
-    const workerDistanceToDurable = Math.round(getDistance({latitude: workerLocation.lat, longitude: workerLocation.lon}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
-    const visitorDistanceToDurable = Math.round(getDistance({latitude,longitude}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
-    const headers = { 'x-do-colo': doColo, 'x-do-latency': workerLatencyToDurable, 'x-visitor-latency': visitorLatencyToWorker }
-    return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2), { headers })
+    
+    if (pathname == '/api') {
+      const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
+      const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
+      const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
+      const stub = env.COLO.get(env.COLO.idFromName(workerColo))
+      const start = new Date()
+      const doColo = await stub.fetch('https://colo.do').then(res => res.text())
+      const workerLatencyToDurable = new Date() - start
+      const workerLocation = locations.find(loc => loc.iata == workerColo)
+      const durableLocation = locations.find(loc => loc.iata == doColo)
+      const visitorDistanceToWorker = Math.round(getDistance({latitude,longitude}, {latitude: workerLocation.lat, longitude: workerLocation.lon}) / 1000)
+      const workerDistanceToDurable = Math.round(getDistance({latitude: workerLocation.lat, longitude: workerLocation.lon}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
+      const visitorDistanceToDurable = Math.round(getDistance({latitude,longitude}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
+      const headers = { 'x-do-colo': doColo, 'x-do-latency': workerLatencyToDurable, 'x-visitor-latency': visitorLatencyToWorker }
+      return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2), { headers })
+    }
+    const { hostname } = new URL(req.url)
+    const [ colo ] = hostname.split('.')
+    return env.COLO.get(env.COLO.idFromName(colo.toUpperCase())).fetch(req)
   }
 }
 
@@ -27,6 +49,22 @@ export class Colo {
     })
   }
   async fetch(req) {
-    return new Response(this.colo)
+    if (req.url == 'https://colo.do') return new Response(this.colo)
+    
+    const { user, origin, requestId, method, body, time, pathname, pathSegments, pathOptions, url, query } = await env.CTX.fetch(req).then(res => res.json())
+        
+    const start = new Date()
+    const res = await fetch('https:/' + pathname).catch(error => undefined)
+    const responseTime = new Date() - start
+    const headers = Object.fromEntries(res?.headers)
+    const data = await res?.text().then(body => {
+      try {
+        return JSON.parse(body)
+      } catch {
+        return body
+      }
+    })
+    
+    return new Response(JSON.stringify({ api, colo: this.colo, responseTime, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   }
 }
