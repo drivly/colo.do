@@ -4,6 +4,14 @@ route = { pattern = "*colo.do/api*", zone_id = "915d9a2273f561654a65ff5722805fec
 main = "worker.js"
 compatibility_date = "2022-07-18"
 
+services = [
+  { binding = "CTX", service = "ctx-do", environment = "production" }
+]
+
+kv_namespaces = [
+  { binding = "SOURCES", id = "123a0eb73b3d464891d0b39c35eb461a", preview_id = "123a0eb73b3d464891d0b39c35eb461a" }
+]
+
 [durable_objects]
 bindings = [{name = "COLO", class_name = "Colo"}]
 
