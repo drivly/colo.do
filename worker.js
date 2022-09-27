@@ -56,6 +56,7 @@ export class Colo {
     const start = new Date()
     const res = await fetch('https:/' + pathname).catch(err => error = {...err})
     const responseTime = new Date() - start
+    const status = res.status
     const headers = Object.fromEntries(res?.headers)
     const data = await res?.text().then(body => {
       try {
@@ -65,8 +66,11 @@ export class Colo {
       }
     })
     
+    const colo = {
+      
+    }
     api.endpoints = Object.entries(colos).reduce((acc, [colo, name]) => ({ ...acc, [name]: `https://${colo}.colo.do${pathname}`}), {})
-    return new Response(JSON.stringify({ api, error, colo: this.colo, responseTime, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
+    return new Response(JSON.stringify({ api, error, colo: this.colo, responseTime, status, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   }
 }
 
