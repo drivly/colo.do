@@ -35,7 +35,6 @@ export default {
       const headers = { 'x-do-colo': doColo, 'x-do-latency': workerLatencyToDurable, 'x-visitor-latency': visitorLatencyToWorker }
       return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2), { headers })
     }
-    const { hostname } = new URL(req.url)
     const [ colo ] = hostname.split('.')
     return env.COLO.get(env.COLO.idFromName(colo.toUpperCase())).fetch(req)
   }
