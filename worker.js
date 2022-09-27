@@ -54,7 +54,7 @@ export class Colo {
     const { user, origin, requestId, method, body, time, pathname, pathSegments, pathOptions, url, query } = await this.env.CTX.fetch(req).then(res => res.json())
         
     const start = new Date()
-    const res = await fetch('https:/' + pathname).catch(error => undefined)
+    const res = await fetch('https:/' + pathname).catch(err => error = {...err})
     const responseTime = new Date() - start
     const headers = Object.fromEntries(res?.headers)
     const data = await res?.text().then(body => {
@@ -66,7 +66,7 @@ export class Colo {
     })
     
     const fetchFrom = Object.entries(colos).reduce((acc, [colo, name]) => ({ ...acc, [name]: `https://${colo}.colo.do${pathname}`}), {})
-    return new Response(JSON.stringify({ api, colo: this.colo, responseTime, fetchFrom, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
+    return new Response(JSON.stringify({ api, error, colo: this.colo, responseTime, fetchFrom, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   }
 }
 
@@ -95,4 +95,6 @@ const colos = {
   via: 'Vienna',
   iad: 'Washington DC',
 }
+
+let error = undefined
 
