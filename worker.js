@@ -97,7 +97,7 @@ const colos = {
   arn: 'Stockholm',
   nrt: 'Tokyo',
   via: 'Vienna',
-  iad: 'Washington DC',
+  iad: 'Virginia',
 }
 
 let error = undefined
