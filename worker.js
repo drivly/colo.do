@@ -18,7 +18,7 @@ export const api = {
 
 export default {
   fetch: async (req, env) => {
-    
+    const { hostname, pathname } = new URL(req.url)
     if (pathname == '/api') {
       const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
       const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
@@ -68,3 +68,29 @@ export class Colo {
     return new Response(JSON.stringify({ api, colo: this.colo, responseTime, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   }
 }
+
+const colos = [
+  "AMS",
+  "ARN",
+  "ATL",
+  "CDG",
+  "DEN",
+  "DFW",
+  "EWR",
+  "FRA",
+  "HKG",
+  "IAD",
+  "KIX",
+  "LAX",
+  "LHR",
+  "MIA",
+  "MRS",
+  "MXP",
+  "NRT",
+  "ORD",
+  "PRG",
+  "SEA",
+  "SIN",
+  "SJC",
+  "VIE"
+]
