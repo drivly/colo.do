@@ -54,16 +54,17 @@ export class Colo {
     const { user, origin, requestId, method, body, time, pathname, pathSegments, pathOptions, url, query } = await this.env.CTX.fetch(req).then(res => res.json())
         
     const start = new Date()
-    const res = await fetch('https:/' + pathname).catch(err => error = {...err})
+    const res = await fetch('https:/' + pathname).catch(console.log())
     const responseTime = new Date() - start
     const status = res.status
     const headers = Object.fromEntries(res?.headers)
-    const data = await res?.text().then(body => {
-      try {
-        return JSON.parse(body)
-      } catch {
-        return body
-      }
+    let text = await res?.text()
+    let data = undefined
+    try {
+      data = JSON.parse(body)
+    } catch {
+      data = text
+    }
     })
     
     const colo = {
