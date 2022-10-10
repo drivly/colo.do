@@ -29,7 +29,7 @@ export default {
       const doColo = await stub.fetch('https://colo.do').then(res => res.text())
       const workerLatencyToDurable = new Date() - start
       const workerLocation = locations.find(loc => loc.iata == workerColo)
-      const durableLocation = locations.find(loc => loc.iata == colo ?? doColo)
+      const durableLocation = locations.find(loc => loc.iata == colo?.toUpperCase() ?? doColo)
       const visitorDistanceToWorker = Math.round(getDistance({latitude,longitude}, {latitude: workerLocation.lat, longitude: workerLocation.lon}) / 1000)
       const workerDistanceToDurable = Math.round(getDistance({latitude: workerLocation.lat, longitude: workerLocation.lon}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
       const visitorDistanceToDurable = Math.round(getDistance({latitude,longitude}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
