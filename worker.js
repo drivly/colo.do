@@ -51,10 +51,10 @@ export class Colo {
   async fetch(req) {
     if (req.url == 'https://colo.do') return new Response(this.colo)
     
-    const { user, origin, requestId, method, body, time, pathname, pathSegments, pathOptions, url, query } = await this.env.CTX.fetch(req).then(res => res.json())
+    const { user, origin, requestId, method, body, time, pathname, search, pathSegments, pathOptions, url, query } = await this.env.CTX.fetch(req).then(res => res.json())
         
     const start = new Date()
-    const res = await fetch('https:/' + pathname).catch(console.log())
+    const res = await fetch('https:/' + pathname + search).catch(console.log())
     const responseTime = new Date() - start
     const status = res.status
     const headers = Object.fromEntries(res?.headers)
