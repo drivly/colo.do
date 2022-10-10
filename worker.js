@@ -19,24 +19,24 @@ export const api = {
 export default {
   fetch: async (req, env) => {
     const { hostname, pathname } = new URL(req.url)
-    const [ colo ] = hostname.split('.')
+    const colo = hostname.split('.').reverse()[2]
     if (pathname == '/api') {
       const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
       const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
       const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
-      const stub = env.COLO.get(env.COLO.idFromName(colo ?? workerColo))
+      const stub = env.COLO.get(env.COLO.idFromName(colo?.toUpperCase() ?? workerColo))
       const start = new Date()
       const doColo = await stub.fetch('https://colo.do').then(res => res.text())
       const workerLatencyToDurable = new Date() - start
       const workerLocation = locations.find(loc => loc.iata == workerColo)
-      const durableLocation = locations.find(loc => loc.iata == doColo)
+      const durableLocation = locations.find(loc => loc.iata == colo ?? doColo)
       const visitorDistanceToWorker = Math.round(getDistance({latitude,longitude}, {latitude: workerLocation.lat, longitude: workerLocation.lon}) / 1000)
       const workerDistanceToDurable = Math.round(getDistance({latitude: workerLocation.lat, longitude: workerLocation.lon}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
       const visitorDistanceToDurable = Math.round(getDistance({latitude,longitude}, {latitude: durableLocation.lat, longitude: durableLocation.lon}) / 1000)
       const headers = { 'x-do-colo': doColo, 'x-do-latency': workerLatencyToDurable, 'x-visitor-latency': visitorLatencyToWorker }
       return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2), { headers })
     }
-    return env.COLO.get(env.COLO.idFromName(colo.toUpperCase())).fetch(req)
+    return env.COLO.get(env.COLO.idFromName(colo?.toUpperCase())).fetch(req)
   }
 }
 
