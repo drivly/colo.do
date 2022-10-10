@@ -19,11 +19,12 @@ export const api = {
 export default {
   fetch: async (req, env) => {
     const { hostname, pathname } = new URL(req.url)
+    const [ colo ] = hostname.split('.')
     if (pathname == '/api') {
       const { colo: workerColo, latitude, longitude, country, region, city, asn, asOrganization: isp, metroCode, postalCode, clientTcpRtt: visitorLatencyToWorker } = req.cf
       const visitor = { latitude, longitude, country, region, city, asn, isp, metroCode, postalCode }
       const locations = await fetch('https://speed.cloudflare.com/locations').then(res => res.json())
-      const stub = env.COLO.get(env.COLO.idFromName(workerColo))
+      const stub = env.COLO.get(env.COLO.idFromName(colo ?? workerColo))
       const start = new Date()
       const doColo = await stub.fetch('https://colo.do').then(res => res.text())
       const workerLatencyToDurable = new Date() - start
@@ -35,7 +36,6 @@ export default {
       const headers = { 'x-do-colo': doColo, 'x-do-latency': workerLatencyToDurable, 'x-visitor-latency': visitorLatencyToWorker }
       return new Response(JSON.stringify({ visitorLatencyToWorker, workerLatencyToDurable, visitorDistanceToWorker, workerDistanceToDurable, visitorDistanceToDurable, visitor, workerLocation, durableLocation  }, null, 2), { headers })
     }
-    const [ colo ] = hostname.split('.')
     return env.COLO.get(env.COLO.idFromName(colo.toUpperCase())).fetch(req)
   }
 }
