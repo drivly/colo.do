@@ -62,7 +62,8 @@ export class Colo {
     let data = undefined
     try {
       data = JSON.parse(text)
-    } catch(err) {
+    } catch({stack}) {
+      console.log({stack})
       data = text
     }
     
