@@ -70,8 +70,8 @@ export class Colo {
       iata: this.colo,
       city: colos[this.colo.toLowerCase()],
     }
-    api.endpoints = Object.entries(colos).reduce((acc, [colo, name]) => ({ ...acc, [name]: `https://${colo}.colo.do${pathname}`}), {})
-    return new Response(JSON.stringify({ api, error, colo, responseTime, status, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
+    const locations = Object.entries(colos).reduce((acc, [colo, name]) => ({ ...acc, [name]: `https://${colo}.colo.do${pathname}`}), {})
+    return new Response(JSON.stringify({ api, error, colo, responseTime, status, locations, headers, data, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   }
 }
 
