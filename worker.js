@@ -61,7 +61,7 @@ export class Colo {
     let text = await res?.text()
     let data = undefined
     try {
-      data = text //JSON.parse(text)
+      data = JSON.parse(text)
     } catch {
       data = text
     }
